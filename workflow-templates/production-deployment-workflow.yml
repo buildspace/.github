@@ -1,0 +1,44 @@
+name: Production Deployment Workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Rebase-And-Merge:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://app.buildspace.so
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Start Rebase And Merge (buildspace style 🤘)
+        run: echo "🎉 Starting Production Rebase And Merge on ${{ github.repository }}"
+      - name: Fetch remote
+        run: |
+          echo "👉 Fetching from remote"
+          git fetch
+          echo "✅ Fetch complete!"
+      - name: Checkout main and pull origin
+        run: |
+          echo "👉 Checking out main branch and pulling origin"
+          git checkout main
+          git pull origin main
+          echo "✅ Checkout and Pull complete!"
+      - name: Checkout prod
+        run: |
+          echo "👉 Checking out prod branch"
+          git checkout prod
+          git pull origin prod
+          echo "✅ Checked out prod branch!"
+      - name: Rebase prod with main
+        run: |
+          echo "👉 Rebasing prod branch with main"
+          git rebase main
+          echo "✅ Rebase complete!"
+      - name: Push to prod
+        run: |
+          echo "👉 Pushing to prod branch"
+          git push origin prod
+          echo "✅ Job complete! You my friend, are a gd legend 🤘"
